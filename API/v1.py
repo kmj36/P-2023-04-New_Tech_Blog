@@ -24,18 +24,18 @@ APIv1 = Namespace('APIv1')
 '''
 @APIv1.route('/user')
 class User(Resource):
-    def get(self): # 사용자목록 조회 (쿼리: 닉네임, 시작날짜, 마지막날짜(기본값: 사용자만든날짜), 마지막로그인조회여부)
+    def get(self): # 사용자목록 조회 (쿼리: 닉네임, 시작날짜[관리자], 마지막날짜(기본값: 사용자만든날짜)[관리자], 마지막로그인조회여부[관리자])
         return "getusers"
     def post(self): # 사용자정보 생성
         return "createuser"
     
 @APIv1.route('/user/<userid>')
 class UserId(Resource):
-    def get(self, userid): # userid사용자정보 조회
+    def get(self, userid): # 사용자정보 조회
         return "getuserinfo %s" % userid
-    def post(self, userid): # userid사용자정보 변경
+    def post(self, userid): # 사용자정보 변경 (필수: 사용자 세션, 비밀번호)
         return "modifyuser %s" % userid
-    def delete(self, userid): # userid사용자정보 제거
+    def delete(self, userid): # 사용자정보 제거 (필수: 사용자 세션[관리자 제외], 비밀번호)
         return "deleteuser %s" % userid
 '''
     게시물
@@ -48,7 +48,7 @@ class Post(Resource):
         return "createpost"
     
 @APIv1.route('/post/<int:postid>')
-class Postid(Resource):
+class PostId(Resource):
     def get(self, postid): # postid게시물 조회
         return "getpost %s" % postid
     def post(self, postid): # postid게시물 변경 (필수 json값: 유저 세션)
@@ -61,9 +61,17 @@ class Postid(Resource):
 '''
 @APIv1.route('/comment/<int:postid>')
 class Comment(Resource):
-    def get(self, postid): # 댓글 조회 (쿼리: )
+    def get(self, postid): # 게시물 댓글목록 조회 (필수: postid, )
         return "getcomment %s" % postid
     def post(self, postid): # 댓글 생성 (필수 json값, 쿼리: postid, 유저 세션)
         return "createcomment %s" % postid
-    def delete(self, postid): # 댓글 제거 (필수 json값, 쿼리: postid, commentid, 유저 세션 [관리자 제외])
-        return "deletecomment %s" % postid
+    
+    
+@APIv1.route('/comment/<int:postid>/<int:commentid>')
+class CommentId(Resource):
+    def get(self, postid, commentid): # 특정 댓글 가져오기
+        return "getcomment {0} {1}".format(postid, commentid)
+    def post(self, postid, commentid): # 특정 댓글 변경
+        return "modifycomment {0} {1}".format(postid, commentid)
+    def delete(self, postid, commentid): # 댓글 제거 (필수 json값, 쿼리: postid, commentid, 유저 세션 [관리자 제외])
+        return "deletecomment {0} {1}".format(postid, commentid)

@@ -28,6 +28,7 @@
 );*/
 
 /*CREATE TABLE IF NOT EXISTS comments (
+	commentid INTEGER PRIMARY KEY,
 	postid SERIAL NOT NULL,
 	userid char(20) NOT NULL,
 	comment text,
