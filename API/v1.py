@@ -38,6 +38,19 @@ class UserId(Resource):
     def delete(self, userid): # 사용자정보 제거 (필수: 사용자 세션[관리자 제외], 비밀번호)
         return "deleteuser %s" % userid
 '''
+    로그인, 로그아웃
+'''
+@APIv1.route('/login')
+class Login(Resource):
+    def post(): # 필수 : userid, password
+        return "login"
+
+@APIv1.route('/logout')
+class Logout(Resource):
+    def post():
+        return "logout"
+        
+'''
     게시물
 '''
 @APIv1.route('/post')
